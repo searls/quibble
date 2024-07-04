@@ -120,6 +120,17 @@ module.exports = {
       const result = quibbledRequiresAFunction()
 
       assert.equal(result, 'loaded a fake function')
+    },
+    'transitively requiring a module and then quibbling it': function () {
+      require('../fixtures/requires-a-reexported-function');
+      quibble('../fixtures/a-function', function () { return 'a very fake function' })
+      const quibbledRequiresAFunction = require('../fixtures/requires-a-reexported-function')
+
+      const result = quibbledRequiresAFunction()
+
+      quibble.reset()
+
+      assert.equal(result, 'loaded a very fake function')
     }
   },
   'requiring-a-node-module': function () {
